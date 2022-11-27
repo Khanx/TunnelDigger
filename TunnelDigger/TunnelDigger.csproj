@@ -53,8 +53,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandTool.cs" />
+    <Compile Include="TunnelDiggerMenu.cs" />
     <Compile Include="Extender.cs" />
-    <Compile Include="TDigger.cs" />
+    <Compile Include="TunnelDiggerJobType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

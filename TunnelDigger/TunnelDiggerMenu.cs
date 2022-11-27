@@ -1,17 +1,17 @@
 ﻿using Pipliz;
 using ModLoaderInterfaces;
 using NetworkUI;
-using Shared;
-using NetworkUI.Items;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using NetworkUI.AreaJobs;
 using Jobs;
+using Shared;
+using NetworkUI.Items;
+using System.Collections.Generic;
 
 namespace TunnelDigger
 {
     [ModLoader.ModManager]
-    public class TDigger : IOnPlayerClicked, IOnPlayerPushedNetworkUIButton
+    public class TunnelDiggerMenu : IOnPlayerPushedNetworkUIButton, IOnPlayerClicked
     {
         public void OnPlayerClicked(Players.Player player, PlayerClickedData click)
         {
@@ -21,9 +21,14 @@ namespace TunnelDigger
             if (click.HitType != PlayerClickedData.EHitType.Block)
                 return;
 
-            if (!ItemTypes.GetType(click.GetVoxelHit().TypeHit).HasParentType(ItemTypes.GetType("Khanx.TunnelDigger")))
+            if (!ItemTypes.GetType(click.GetVoxelHit().TypeHit).HasParentType(ItemTypes.GetType("Khanx.TunnelDiggerJob")))
                 return;
 
+            SendMenu(click.GetVoxelHit().BlockHit, ItemTypes.GetType(click.GetVoxelHit().TypeHit).Name, player);
+        }
+
+        public static void SendMenu(Vector3Int blockPosition, string typeName, Players.Player player)
+        {
             NetworkMenu tunnelMenu = new NetworkMenu();
 
             tunnelMenu.Identifier = "TunnelDigger";
@@ -92,7 +97,7 @@ namespace TunnelDigger
 
             ButtonCallback digButton = new ButtonCallback("Khanx.TunnelDigger.Dig",
                                                                       new LabelData("Dig", UnityEngine.Color.white),
-                                                                      width*2,
+                                                                      width * 2,
                                                                       30,
                                                                       ButtonCallback.EOnClickActions.ClosePopup);
 
@@ -107,9 +112,9 @@ namespace TunnelDigger
                 (new EmptySpace(), width/2)
             }));
 
-            tunnelMenu.LocalStorage.SetAs("Khanx.TunnelDigger.Position." + player.Name, click.GetVoxelHit().BlockHit.ToString());
+            tunnelMenu.LocalStorage.SetAs("Khanx.TunnelDigger.Position." + player.Name, blockPosition.ToString());
 
-            string rotation = ItemTypes.GetType(click.GetVoxelHit().TypeHit).Name;
+            string rotation = typeName;
             rotation = rotation.Substring(rotation.Length - 2);
 
             tunnelMenu.LocalStorage.SetAs("Khanx.TunnelDigger.Rotation." + player.Name, rotation);
@@ -138,7 +143,7 @@ namespace TunnelDigger
 
                 Vector3Int pos1 = Vector3Int.zero, pos2 = Vector3Int.zero;
                 string rotation = data.Storage.GetAsOrDefaultOrError<string>("Khanx.TunnelDigger.Rotation." + data.Player.Name, "");
-                
+
                 /*
                 if (up > 0)
                     up -= 1;
@@ -205,7 +210,7 @@ namespace TunnelDigger
                     { "constructionType", "pipliz.digger" }
                 };
 
-                if(AreaJobTracker.CreateNewAreaJob("pipliz.constructionarea", args, data.Player.ActiveColony, corner1, corner2) == null)
+                if (AreaJobTracker.CreateNewAreaJob("pipliz.constructionarea", args, data.Player.ActiveColony, corner1, corner2) == null)
                 {
                     //Area no created because overlaps another area.
                     return;
@@ -220,6 +225,8 @@ namespace TunnelDigger
                 BlockToolDescriptionSettings blockToolDescriptionSettings = description as BlockToolDescriptionSettings;
 
                 CommandToolManager.StartCommandToolSelection(data.Player, blockToolDescriptionSettings);
+
+                ServerManager.TryChangeBlock(Vector3Int.Parse(sPosition), BlockTypes.BuiltinBlocks.Types.air, data.Player);
             }
         }
     }

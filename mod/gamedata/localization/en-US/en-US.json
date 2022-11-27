@@ -1,0 +1,11 @@
+{
+	"sentences" : {
+		"popup" : {
+			"tooljob" : {
+				"TunnelDigger" : "Tunnel Digger",
+				"TunnelDiggerA" : "Dig out an area of the world",
+				"TunnelDiggerB" : "You do not need to select the area"
+			}
+		}
+	}
+}

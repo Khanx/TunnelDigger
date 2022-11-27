@@ -1,0 +1,28 @@
+[
+	{
+		"name": "TunnelDigger",
+		"version": "0.1.0.5",
+		"description" : "The tunnel digger is a new type of digger that allow you to make tunnels without selecting both corners.",
+		"enableddefault" : true,
+		"dllpath": "TunnelDigger.dll",
+		"compatibleversions":
+			[
+				"0.9.0"
+			],
+		"jsonFiles" : [
+			{
+				"relativePath" : "./gamedata/generateblocks.json",
+				"fileType": "generateBlocks",
+				"index": -1000000
+			},
+			{
+				"fileType": "addOrOverrideLocalization",
+				"relativePath": "gamedata/localization/en-US/en-US.json"
+			},
+			{
+				"fileType": "addOrOverrideLocalization",
+				"relativePath": "gamedata/localization/es-ES/es-ES.json"
+			}
+		]
+	}
+]
